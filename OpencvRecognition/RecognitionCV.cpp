@@ -3,17 +3,24 @@
 
 void RecognitionCV::DetectAndDraw()
 {
-    Mat frame;
-    vector<Rect> Rects;
-    Scalar faceColor(0, 255, 0);
+    Mat frame, subframe;
+    vector<Rect> Rects, nestedRects;
+    Scalar faceColor(0, 255, 0), eyeColor(0, 0, 255);
     vCapture >> frame;
 
     while (!frame.empty()) {
         vCapture >> frame;
         cascade.detectMultiScale(frame, Rects);
-        for (Rect r : Rects)
-            rectangle(frame, r, faceColor);
-
+        for (Rect r : Rects) {
+            rectangle(frame, r, faceColor, 2);
+            subframe = frame(r);
+            nestedCascade.detectMultiScale(subframe, nestedRects, 1.1, 2, 0, Size(30, 30), Size(40, 40));
+            for (Rect nr : nestedRects) {
+                nr.x += r.x;
+                nr.y += r.y;
+                rectangle(frame, nr, eyeColor);
+            }
+        }
         imshow("Face recognition", frame);
         char c = waitKey(10);
         switch (c) {
