@@ -2,7 +2,7 @@
 #include "Windows.h"
 #include "RecognitionCV.h"
 
-void RecognitionCV::DetectAndDraw()
+void RecognitionCV::DetectAndDraw(BITMAP& BMP)
 {
     Mat frame, subframe, grayFrame;
     vector<Rect> Rects, nestedRects;
@@ -33,23 +33,24 @@ void RecognitionCV::DetectAndDraw()
         }
     }
 }
-void RecognitionCV::Init(int cameraMode, string cascadeFilePath, string nestedCascadeFilePath)
+bool RecognitionCV::Init(int cameraMode, string cascadeFilePath, string nestedCascadeFilePath)
 {
     vCapture.open(cameraMode);
     if (!vCapture.isOpened()) {
         cout << "\n[!] Couldn't open webcam.\n" << endl;
-        return;
+        return false;
     }
     cascade.load(cascadeFilePath);
     nestedCascade.load(nestedCascadeFilePath);
     if (cascade.empty() || nestedCascade.empty()) {
         cout << "[!]Wrong path to cascades provided. \nCascade: " << !cascade.empty() << "\nNestedCascade: " << !nestedCascade.empty();
-        return;
+        return false;
     }
+    return true;
 }
-void RecognitionCV::StartFaceDetection()
+void RecognitionCV::StartFaceDetection(BITMAP& BMP)
 {
     ::ShowWindow(::GetConsoleWindow(), SW_HIDE);
-    DetectAndDraw();
+    DetectAndDraw(BMP);
     ::ShowWindow(::GetConsoleWindow(), SW_NORMAL);
 }

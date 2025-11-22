@@ -13,11 +13,11 @@ class RecognitionCV
 	CascadeClassifier cascade;
 	CascadeClassifier nestedCascade;
 private:
-	void DetectAndDraw();
+	void DetectAndDraw(BITMAP& BMP);
 public:
-	void Init(int cameraMode, 
+	bool Init(int cameraMode, 
 		string cascadeFilePath = R"(C:\lib\opencv\build\etc\haarcascades\haarcascade_frontalface_default.xml)",	
 		string nestedCascadeFilePath = R"(C:\lib\opencv\build\etc\haarcascades\haarcascade_eye.xml)");
-	void StartFaceDetection();
+	void StartFaceDetection(BITMAP& BMP);
 };
 

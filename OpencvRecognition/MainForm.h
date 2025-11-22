@@ -85,6 +85,7 @@ namespace OpencvRecognition {
 
 	protected:
 		RecognitionCV* RecCV = new RecognitionCV();
+		Bitmap^ BMP = gcnew Bitmap();
 
 
 
@@ -215,7 +216,7 @@ namespace OpencvRecognition {
 			this->layoutFunctions->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent,
 				47.39336F)));
 			this->layoutFunctions->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Absolute,
-				68)));
+				69)));
 			this->layoutFunctions->Controls->Add(this->textBoxCamera, 1, 0);
 			this->layoutFunctions->Controls->Add(this->label1, 0, 0);
 			this->layoutFunctions->Controls->Add(this->tabControlFunctions, 0, 1);
@@ -232,7 +233,7 @@ namespace OpencvRecognition {
 			// textBoxCamera
 			// 
 			this->textBoxCamera->Dock = System::Windows::Forms::DockStyle::Top;
-			this->textBoxCamera->Location = System::Drawing::Point(120, 3);
+			this->textBoxCamera->Location = System::Drawing::Point(119, 3);
 			this->textBoxCamera->Name = L"textBoxCamera";
 			this->textBoxCamera->Size = System::Drawing::Size(99, 20);
 			this->textBoxCamera->TabIndex = 0;
@@ -245,7 +246,7 @@ namespace OpencvRecognition {
 			this->label1->Location = System::Drawing::Point(6, 6);
 			this->label1->Margin = System::Windows::Forms::Padding(6);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(105, 13);
+			this->label1->Size = System::Drawing::Size(104, 13);
 			this->label1->TabIndex = 1;
 			this->label1->Text = L"Номер камеры:";
 			this->label1->Click += gcnew System::EventHandler(this, &MainForm::label1_Click);
@@ -358,7 +359,8 @@ private: System::Void textBoxCamera_KeyPress(System::Object^ sender, System::Win
 		System::String^ sMode = textBoxCamera->Text;
 		int cameraMode;
 		if (int::TryParse(sMode, cameraMode))
-			RecCV->Init(cameraMode);
+			if (RecCV->Init(cameraMode))
+				RecCV->StartFaceDetection(BMP);
 	}
 }
 };
