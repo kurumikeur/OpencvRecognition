@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "Windows.h"
 #include "RecognitionCV.h"
 
 void RecognitionCV::DetectAndDraw()
@@ -11,11 +12,11 @@ void RecognitionCV::DetectAndDraw()
     while (!frame.empty()) {
         vCapture >> frame;
         cvtColor(frame, grayFrame, COLOR_BGR2GRAY);
-        cascade.detectMultiScale(frame, Rects);
+        cascade.detectMultiScale(frame, Rects, 1.2, 5);
         for (Rect r : Rects) {
             rectangle(frame, r, faceColor, 2);
             subframe = grayFrame(r);
-            nestedCascade.detectMultiScale(subframe, nestedRects, 1.1, 2, 0, Size(30, 30), Size(40, 40));
+            nestedCascade.detectMultiScale(subframe, nestedRects, 1.2, 2, 0, Size(30, 30), Size(40, 40));
             for (Rect nr : nestedRects) {
                 nr.x += r.x;
                 nr.y += r.y;
@@ -26,32 +27,29 @@ void RecognitionCV::DetectAndDraw()
         char c = waitKey(10);
         switch (c) {
         case('q'):
+            cout << "[Inf] Exited from face and eyes detection." << endl;
+            destroyAllWindows();
             return;
         }
     }
 }
-
-int RecognitionCV::StartFaceDetection(string cascadeFilePath, string nestedCascadeFilePath)
+void RecognitionCV::Init(int cameraMode, string cascadeFilePath, string nestedCascadeFilePath)
 {
-    int vCaptureMode = 0;
-
-    while(1) {
-        cout << "Enter webcam mode: ";
-        cin >> vCaptureMode;
-        vCapture.open(vCaptureMode);
-        if(!vCapture.isOpened())
-            cout << "\n[!] Couldn't open webcam.\n" << endl;
-        else 
-            break;
+    vCapture.open(cameraMode);
+    if (!vCapture.isOpened()) {
+        cout << "\n[!] Couldn't open webcam.\n" << endl;
+        return;
     }
-
     cascade.load(cascadeFilePath);
     nestedCascade.load(nestedCascadeFilePath);
     if (cascade.empty() || nestedCascade.empty()) {
-        cout << "Wrong path to cascades provided. \nCascade: " << !cascade.empty() << "\nNestedCascade: " << !nestedCascade.empty();
-        return 0;
+        cout << "[!]Wrong path to cascades provided. \nCascade: " << !cascade.empty() << "\nNestedCascade: " << !nestedCascade.empty();
+        return;
     }
-
+}
+void RecognitionCV::StartFaceDetection()
+{
+    ::ShowWindow(::GetConsoleWindow(), SW_HIDE);
     DetectAndDraw();
-    return 1;
+    ::ShowWindow(::GetConsoleWindow(), SW_NORMAL);
 }

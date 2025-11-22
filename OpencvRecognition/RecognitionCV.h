@@ -15,6 +15,9 @@ class RecognitionCV
 private:
 	void DetectAndDraw();
 public:
-	int StartFaceDetection(string cascadeFilePath, string nestedCascadeFilePath);
+	void Init(int cameraMode, 
+		string cascadeFilePath = R"(C:\lib\opencv\build\etc\haarcascades\haarcascade_frontalface_default.xml)",	
+		string nestedCascadeFilePath = R"(C:\lib\opencv\build\etc\haarcascades\haarcascade_eye.xml)");
+	void StartFaceDetection();
 };
 
