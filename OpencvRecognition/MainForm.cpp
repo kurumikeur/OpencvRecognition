@@ -14,9 +14,6 @@ int main()
     OpencvRecognition::MainForm form;
     Application::Run(% form);
 
-    RecognitionCV rCv;
-    rCv.StartFaceDetection(      
-    );
     
     return 0;
 }
